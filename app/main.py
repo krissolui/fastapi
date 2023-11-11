@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from . import models
 from .database import engine
-from dotenv import load_dotenv
 from .routers import auth, post, user
 
 
