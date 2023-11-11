@@ -5,9 +5,9 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
-    null,
     text,
 )
+from sqlalchemy.orm import relationship
 from .database import Base
 
 
@@ -24,6 +24,8 @@ class Post(Base):
         ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"),
         nullable=False,
     )
+
+    owner = relationship("User")
 
 
 class User(Base):

@@ -3,20 +3,13 @@ from pydantic import BaseModel, EmailStr
 from datetime import datetime
 
 
-class PostBase(BaseModel):
-    title: str
-    content: str
-    published: bool = True
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 
-class PostCreate(PostBase):
-    pass
-
-
-class PostResponse(PostBase):
-    id: int
-    created_at: datetime
-    owner_id: int
+class TokenPayload(BaseModel):
+    id: Optional[int] = None
 
 
 class UserBase(BaseModel):
@@ -38,10 +31,17 @@ class UserLogin(UserBase):
     pass
 
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+class PostBase(BaseModel):
+    title: str
+    content: str
+    published: bool = True
 
 
-class TokenPayload(BaseModel):
-    id: Optional[int] = None
+class PostCreate(PostBase):
+    pass
+
+
+class PostResponse(PostBase):
+    id: int
+    created_at: datetime
+    owner: UserResponse
