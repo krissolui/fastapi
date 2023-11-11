@@ -1,13 +1,14 @@
 from typing import List
 from fastapi import APIRouter, Depends, Response, status, HTTPException
 from sqlalchemy.orm import Session
-from app import models, oauth2, schemas
+from app import models, oauth2
 from ..database import get_db
+from ..schemas import post
 
 router = APIRouter(prefix="/posts", tags=["Posts"])
 
 
-@router.get("", response_model=List[schemas.PostResponse])
+@router.get("", response_model=List[post.PostResponse])
 def list_posts(
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
@@ -16,11 +17,9 @@ def list_posts(
     return posts
 
 
-@router.post(
-    "", status_code=status.HTTP_201_CREATED, response_model=schemas.PostResponse
-)
+@router.post("", status_code=status.HTTP_201_CREATED, response_model=post.PostResponse)
 def create_post(
-    post: schemas.PostCreate,
+    post: post.PostCreate,
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
 ):
@@ -32,10 +31,10 @@ def create_post(
     return new_post
 
 
-@router.put("/{id}", response_model=schemas.PostResponse)
+@router.put("/{id}", response_model=post.PostResponse)
 def update_post(
     id: int,
-    updated_post: schemas.PostCreate,
+    updated_post: post.PostCreate,
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
 ):
@@ -59,7 +58,7 @@ def update_post(
     return post_query.first()
 
 
-@router.get("/{id}", response_model=schemas.PostResponse)
+@router.get("/{id}", response_model=post.PostResponse)
 def get_post(
     id: int,
     db: Session = Depends(get_db),

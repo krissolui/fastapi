@@ -2,15 +2,16 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from app import models, schemas, utils
+from app import models, utils
 from ..database import get_db
 from ..oauth2 import create_access_token
+from ..schemas import auth
 
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
-@router.post("/login", response_model=schemas.Token)
+@router.post("/login", response_model=auth.Token)
 def login(
     user_credentials: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db),
