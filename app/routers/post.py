@@ -12,8 +12,6 @@ def list_posts(
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
 ):
-    # cursor.execute("""SELECT * FROM posts""")
-    # posts = cursor.fetchall()
     posts = db.query(models.Post).all()
     return posts
 
@@ -26,13 +24,6 @@ def create_post(
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
 ):
-    # print(post)
-    # cursor.execute(
-    #     """INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING *""",
-    #     [post.title, post.content, post.published],
-    # )
-    # new_post = cursor.fetchone()
-    # conn.commit()
     new_post = models.Post(**post.model_dump())
     db.add(new_post)
     db.commit()
@@ -47,11 +38,6 @@ def update_post(
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
 ):
-    # cursor.execute(
-    #     """UPDATE posts SET title = %s, content = %s, published = %s WHERE id = %s RETURNING *""",
-    #     (post.title, post.content, post.published, id),
-    # )
-    # updated_post = cursor.fetchone()
     post_query = db.query(models.Post).filter(models.Post.id == id)
 
     post = post_query.first()
@@ -61,7 +47,6 @@ def update_post(
             status.HTTP_404_NOT_FOUND, f"post with id {id} does not exist"
         )
 
-    # conn.commit()
     post_query.update(updated_post.model_dump(), synchronize_session=False)
     db.commit()
 
@@ -74,8 +59,6 @@ def get_post(
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
 ):
-    # cursor.execute("""SELECT * FROM posts WHERE id = %s""", [str(id)])
-    # post = cursor.fetchone()
     post = db.query(models.Post).filter(models.Post.id == id).first()
 
     if post is None:
@@ -92,8 +75,6 @@ def delete_post(
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
 ):
-    # cursor.execute("""DELETE FROM posts WHERE id = %s RETURNING *""", [str(id)])
-    # deleted_post = cursor.fetchone()
     post = db.query(models.Post).filter(models.Post.id == id)
 
     if post.first() is None:
@@ -101,7 +82,6 @@ def delete_post(
             status.HTTP_404_NOT_FOUND, f"post with id {id} does not exist"
         )
 
-    # conn.commit()
     post.delete(synchronize_session=False)
     db.commit()
 
