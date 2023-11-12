@@ -9,17 +9,15 @@ from .schemas import auth
 from .config import config
 
 
-# ALERT::sample secret key for learning purpose only
 SECRET_KEY = config.OAUTH_SECRET_KEY
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 oauth2_scheme = OAuth2PasswordBearer("auth/login")
 
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.utcnow() + timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
 
     access_token = jwt.encode(to_encode, SECRET_KEY, ALGORITHM)

@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     DB_HOST: str = "localhost"
     DB_DATABASE: str = "postgres"
     OAUTH_SECRET_KEY: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
 
 config = Settings()
