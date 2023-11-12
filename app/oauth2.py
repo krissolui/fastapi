@@ -3,7 +3,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
-from . import models
+from .models import user as user_models
 from .database import get_db
 from .schemas import auth
 from .config import config
@@ -50,5 +50,5 @@ def get_current_user(
 
     token = verify_access_token(token, credentials_exception)
 
-    user = db.query(models.User).filter(models.User.id == token.id).first()
+    user = db.query(user_models.User).filter(user_models.User.id == token.id).first()
     return user

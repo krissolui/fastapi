@@ -2,10 +2,11 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from app import models, utils
+from app import utils
 from ..database import get_db
 from ..oauth2 import create_access_token
 from ..schemas import auth
+from ..models import user as user_models
 
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -17,8 +18,8 @@ def login(
     db: Session = Depends(get_db),
 ):
     user = (
-        db.query(models.User)
-        .filter(models.User.email == user_credentials.username)
+        db.query(user_models.User)
+        .filter(user_models.User.email == user_credentials.username)
         .first()
     )
 

@@ -1,9 +1,10 @@
 from typing import List
 from fastapi import APIRouter, Depends, Response, status, HTTPException
 from sqlalchemy.orm import Session
-from app import models, oauth2
+from app import oauth2
 from ..database import get_db
 from ..schemas import post
+from ..models import post as post_models
 
 router = APIRouter(prefix="/posts", tags=["Posts"])
 
@@ -18,8 +19,8 @@ def list_posts(
 ):
     offset = (max(1, page) - 1) * limit
     posts = (
-        db.query(models.Post)
-        .filter(models.Post.title.contains(search))
+        db.query(post_models.Post)
+        .filter(post_models.Post.title.contains(search))
         .offset(offset)
         .limit(limit)
         .all()
@@ -33,7 +34,7 @@ def create_post(
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
 ):
-    new_post = models.Post(**post.model_dump())
+    new_post = post_models.Post(**post.model_dump())
     new_post.owner_id = current_user.id
     db.add(new_post)
     db.commit()
@@ -48,7 +49,7 @@ def update_post(
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
 ):
-    post_query = db.query(models.Post).filter(models.Post.id == id)
+    post_query = db.query(post_models.Post).filter(post_models.Post.id == id)
 
     post = post_query.first()
 
@@ -74,7 +75,7 @@ def get_post(
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
 ):
-    post = db.query(models.Post).filter(models.Post.id == id).first()
+    post = db.query(post_models.Post).filter(post_models.Post.id == id).first()
 
     if post is None:
         raise HTTPException(
@@ -90,7 +91,7 @@ def delete_post(
     db: Session = Depends(get_db),
     current_user=Depends(oauth2.get_current_user),
 ):
-    post_query = db.query(models.Post).filter(models.Post.id == id)
+    post_query = db.query(post_models.Post).filter(post_models.Post.id == id)
     post = post_query.first()
 
     if post is None:
