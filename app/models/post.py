@@ -8,7 +8,7 @@ from sqlalchemy import (
     text,
 )
 from sqlalchemy.orm import relationship
-from ..database import Base
+from .base import Base
 
 
 class Post(Base):

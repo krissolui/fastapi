@@ -1,10 +1,9 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import psycopg
 from psycopg.rows import dict_row
 from .config import config
-
+from .models import post, user, vote
 
 # psycopg connection
 while True:
@@ -20,7 +19,7 @@ while True:
         cursor = conn.cursor()
         print("Connected to database")
         break
-    finally:
+    except:
         print("Fail to connection with database")
 
 # SQLAlchemy connection
@@ -28,8 +27,6 @@ SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg://{config.DB_USER}:{config.DB_PAS
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-Base = declarative_base()
 
 
 def get_db():
